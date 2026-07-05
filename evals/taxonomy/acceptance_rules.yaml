@@ -1,0 +1,24 @@
+# Defect -> acceptance mapping parameters for ISO 5817 (see iso5817-acceptance.md).
+#
+# STATUS: v0 PLACEHOLDER. These encode the *qualitative* structure of ISO 5817 (crack never
+# permitted; lack-of-fusion permitted only at level D; volumetric limits tightening B -> C -> D)
+# but are NOT the standard's real thickness-dependent numeric limits. Do not publish results or
+# make product decisions against real parts using these numbers. Replace per the calibration
+# backlog in iso5817-acceptance.md (pull real limits from the standard text or a design partner's
+# WPS, keyed by thickness band) before this leaves v0.
+version: v0-placeholder
+
+# Defect types for which ANY size/presence is a reject, at every acceptance level.
+never_permitted:
+  - crack
+
+# Defect types permitted only at the loosest level (short imperfections only).
+level_d_only:
+  - lack_of_fusion
+
+# Volumetric defect types (slag_inclusion, porosity): reject if measured size_mm >= the level's
+# limit. Placeholder numbers only -- not thickness-banded yet (see calibration backlog).
+volumetric_limit_mm:
+  B: 1.5
+  C: 2.5
+  D: 4.0

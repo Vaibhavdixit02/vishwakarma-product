@@ -1,0 +1,149 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://vishwakarma.dev/evals/record.schema.json",
+  "title": "Inspection Record",
+  "description": "One physical part = one record. Multimodal by construction (PAUT first; RGB/eddy/thermography drop in without schema change). Holds raw modality references, defect annotations, the acceptance class, and the ground-truth decision the economic metric scores against.",
+  "type": "object",
+  "required": ["record_id", "part", "acceptance", "modalities", "annotations", "ground_truth", "provenance"],
+  "additionalProperties": false,
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "description": "Stable unique id for this part/record."
+    },
+    "part": {
+      "type": "object",
+      "required": ["family", "material"],
+      "additionalProperties": true,
+      "properties": {
+        "family": {
+          "type": "string",
+          "enum": ["weld", "casting", "forged", "other"],
+          "description": "Application family. v0 = weld."
+        },
+        "material": { "type": "string", "description": "e.g. carbon-steel, stainless-304." },
+        "thickness_mm": { "type": "number", "minimum": 0, "description": "Nominal section thickness — drives ISO 5817 limits." },
+        "joint_type": { "type": "string", "description": "e.g. butt, fillet, girth." }
+      }
+    },
+    "acceptance": {
+      "type": "object",
+      "required": ["standard", "class"],
+      "additionalProperties": false,
+      "properties": {
+        "standard": { "type": "string", "default": "ISO 5817", "description": "Governing acceptance standard." },
+        "class": {
+          "type": "string",
+          "enum": ["B", "C", "D"],
+          "description": "ISO 5817 quality level this part ships under. The decision is made RELATIVE to this."
+        },
+        "spec_override": {
+          "type": ["string", "null"],
+          "description": "Free-text pointer if a partner WPS/spec overrides the standard limits."
+        }
+      }
+    },
+    "modalities": {
+      "type": "object",
+      "description": "One block per modality present. PAUT required in v0; others optional and additive.",
+      "minProperties": 1,
+      "additionalProperties": false,
+      "properties": {
+        "paut": { "$ref": "#/$defs/paut" },
+        "rgb": { "$ref": "#/$defs/rgb" },
+        "eddy": { "$ref": "#/$defs/genericModality" },
+        "thermography": { "$ref": "#/$defs/genericModality" }
+      }
+    },
+    "annotations": {
+      "type": "array",
+      "description": "Per-indication ground-truth labels used to derive the decision via the taxonomy.",
+      "items": { "$ref": "#/$defs/annotation" }
+    },
+    "ground_truth": {
+      "type": "object",
+      "required": ["decision", "derived_by"],
+      "additionalProperties": false,
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": ["pass", "reject"],
+          "description": "Decision for THIS part under ITS acceptance class. Derived from annotations + taxonomy/iso5817-acceptance map."
+        },
+        "governing_defect": {
+          "type": ["string", "null"],
+          "description": "annotation id of the indication that drove a reject (null if pass)."
+        },
+        "derived_by": {
+          "type": "string",
+          "description": "Versioned mapping rule that produced the decision (e.g. 'iso5817-acceptance@v0')."
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "required": ["source", "license"],
+      "additionalProperties": true,
+      "properties": {
+        "source": { "type": "string", "description": "Originating dataset / partner (see datasets/sources.md)." },
+        "license": { "type": "string", "description": "License or usage terms of the underlying data." },
+        "synthetic": { "type": "boolean", "default": false, "description": "True if simulated (e.g. CIVA)." },
+        "label_source": { "type": "string", "description": "Who/what produced the annotations (original author, our relabel, certified inspector)." }
+      }
+    }
+  },
+  "$defs": {
+    "paut": {
+      "type": "object",
+      "required": ["scan_type", "data_ref"],
+      "additionalProperties": true,
+      "properties": {
+        "scan_type": { "type": "string", "enum": ["A-scan", "B-scan", "S-scan", "volume"], "description": "PAUT data representation." },
+        "data_ref": { "type": "string", "description": "Relative path / URI to the array file (kept out of git; manifest holds checksum)." },
+        "checksum_sha256": { "type": "string" },
+        "probe": { "type": "object", "description": "Probe geometry: frequency, element count, pitch.", "additionalProperties": true },
+        "shape": { "type": "array", "items": { "type": "integer" }, "description": "Array dimensions." }
+      }
+    },
+    "rgb": {
+      "type": "object",
+      "required": ["data_ref"],
+      "additionalProperties": true,
+      "properties": {
+        "data_ref": { "type": "string" },
+        "checksum_sha256": { "type": "string" },
+        "resolution_px": { "type": "array", "items": { "type": "integer" } }
+      }
+    },
+    "genericModality": {
+      "type": "object",
+      "required": ["data_ref"],
+      "additionalProperties": true,
+      "properties": {
+        "data_ref": { "type": "string" },
+        "checksum_sha256": { "type": "string" }
+      }
+    },
+    "annotation": {
+      "type": "object",
+      "required": ["id", "defect_type"],
+      "additionalProperties": true,
+      "properties": {
+        "id": { "type": "string" },
+        "defect_type": {
+          "type": "string",
+          "enum": ["crack", "lack_of_fusion", "slag_inclusion", "porosity", "none"],
+          "description": "ISO 6520-1 aligned. v0 set."
+        },
+        "iso6520_ref": { "type": ["integer", "null"], "description": "e.g. 100 crack, 401 LOF, 301 slag, 2017 porosity." },
+        "modality": { "type": "string", "description": "Which modality this indication was annotated on." },
+        "geometry": {
+          "type": "object",
+          "description": "Localization in the relevant modality's coordinate frame (bbox/mask/point).",
+          "additionalProperties": true
+        },
+        "size_mm": { "type": ["number", "null"], "description": "Measured size used against the acceptance limit." }
+      }
+    }
+  }
+}
