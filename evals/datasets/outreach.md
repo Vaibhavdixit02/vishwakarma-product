@@ -145,6 +145,43 @@ things stand. Update the **Status** line as replies come in.
 
 ---
 
+## 3. abonyilab/3D-scanner-data (first genuinely public find — license-file ask, low stakes)
+
+- **Repo:** <https://github.com/abonyilab/3D-scanner-data> — 4 real structured-light weld scans
+  (1 ideal etalon + 3 defective T-welded specimens, ~400k-vertex ASCII PLY from a DAVID/HP
+  structured-light scanner) + 7 CAD models of ISO 5817:2014 defect geometries. Downloaded and
+  inspected 2026-07-06.
+- **Paper:** Hegedűs-Kuti, Szőlősi, Varga, Abonyi, Andó, Ruppert, "3D Scanner-Based Identification
+  of Welding Defects—Clustering the Results of Point Cloud Alignment," *Sensors* 23(5):2503 (2023),
+  open access CC BY — <https://www.mdpi.com/1424-8220/23/5/2503>
+- **Data Availability Statement (verified 2026-07-06):** *"Publicly available datasets were
+  analyzed in this study. This data can be found here: https://github.com/abonyilab/3D-scanner-data"*
+  — the authors themselves declare it public. The repo has **no LICENSE file**, so internal
+  research/dev use is safe on the DAS, but redistribution/benchmark publication needs them to add
+  one (MIT or CC BY).
+- **Fit:** not PAUT and only N=4 — a real-data *fixture* for a surface-geometry (`scan3d`)
+  modality adapter and schema proof (the dimensional/visual station in the rail-inspection story),
+  not a training corpus.
+- **Contact:** Abonyi lab, University of Pannonia — <https://www.abonyilab.com> (corresponding
+  author on the Sensors paper; email on the article page).
+- **Status:** ⬜ Outreach optional/not yet sent — only needed before any *redistribution*. Draft:
+
+> **Subject:** License file for abonyilab/3D-scanner-data?
+>
+> Dear Dr. Ruppert / Dr. Abonyi,
+>
+> Thank you for publishing the 3D scanner weld dataset accompanying your Sensors 2023 paper
+> ("3D Scanner-Based Identification of Welding Defects"). I'm using it in applied research on
+> automated weld inspection. The paper's Data Availability Statement marks the dataset as
+> publicly available, but the GitHub repository has no license file — would you consider adding
+> one (e.g. MIT or CC BY 4.0) so downstream use and attribution are unambiguous? Happy to credit
+> the paper in any resulting work either way.
+>
+> Best regards,
+> [Your name]
+
+---
+
 ## Ruled out, no outreach planned
 
 | Source | Reason |
@@ -156,10 +193,11 @@ things stand. Update the **Status** line as replies come in.
 
 - "Fusion Datasets for Ultrasonic Weld Defect Classification with Transfer Learning" —
   <https://www.researchgate.net/publication/379256996_Fusion_Datasets_for_Ultrasonic_Weld_Defect_Classification_with_Transfer_Learning>
-- "Automated Weld Defect Detection in Industrial Ultrasonic B-Scan Images Using Deep Learning"
-  (MDPI *NDT* 2(2):7, 2024) — 359 B-scan images / 229 LOF annotations from real girth-weld
-  inspection in oil & gas pipelines — <https://www.mdpi.com/2813-477X/2/2/7> — **check its Data
-  Availability Statement first; best near-term candidate of this list.**
+- ~~"Automated Weld Defect Detection in Industrial Ultrasonic B-Scan Images Using Deep Learning"
+  (MDPI *NDT* 2(2):7, 2024)~~ — 359 B-scan images / 229 LOF annotations —
+  <https://www.mdpi.com/2813-477X/2/2/7> — **RULED OUT 2026-07-06 (user checked the paper):**
+  *"the dataset is proprietary of CRC-Evans."* This also rules out the two sibling papers below
+  (same group, same dataset family).
 - WeldNet (Provencal & Laperrière, CIRP Annals 71(1):445–448, 2022) — 3D geometric reconstruction
   from PAUT — <https://www.sciencedirect.com/science/article/abs/pii/S0007850622000683>
   (paywalled; DOI 10.1016/j.cirp.2022.04.033)
@@ -169,14 +207,18 @@ things stand. Update the **Status** line as replies come in.
 
 ### New candidates surfaced by the 2026-07-06 link search (not previously cataloged)
 
-- "Automated Weld Defect Classification Enhanced by Synthetic Data Augmentation in Industrial
-  Ultrasonic Images" (Applied Sciences 15(23):12811, 2025) — same Croatian oil&gas B-scan group as
-  the NDT 2(2):7 paper, real LOF dataset + synthetic augmentation —
-  <https://www.mdpi.com/2076-3417/15/23/12811>
-- "Leveraging SAM for Weld Defect Detection in Industrial Ultrasonic B-Scan Images" (2025) — same
-  group/dataset family, explicitly a *proprietary* dataset —
-  <https://pmc.ncbi.nlm.nih.gov/articles/PMC11723471/>
+- ~~"Automated Weld Defect Classification Enhanced by Synthetic Data Augmentation in Industrial
+  Ultrasonic Images" (Applied Sciences 15(23):12811, 2025)~~ — same Croatian oil&gas B-scan group
+  as the NDT 2(2):7 paper — <https://www.mdpi.com/2076-3417/15/23/12811> — **ruled out with it
+  (CRC-Evans proprietary).**
+- ~~"Leveraging SAM for Weld Defect Detection in Industrial Ultrasonic B-Scan Images" (2025)~~ —
+  same group/dataset family — <https://pmc.ncbi.nlm.nih.gov/articles/PMC11723471/> — **ruled out
+  with it (explicitly proprietary).**
 - RIAWELC — radiographic (RT, not PAUT) weld defect classification dataset, claimed novel/public —
   <https://www.researchgate.net/publication/369294451_RIAWELC_A_Novel_Dataset_of_Radiographic_Images_for_Automatic_Weld_Defects_Classification>
   — RT would be a third modality; note for later, not v0.
-- Community index of weld-defect datasets (unvetted): <https://github.com/admin1523/Weld-defect-detection-datasets>
+- ~~Community index of weld-defect datasets~~
+  <https://github.com/admin1523/Weld-defect-detection-datasets> — **vetted 2026-07-06, not
+  usable:** indexes two X-ray/RT (not UT/PAUT) image sets hosted on Baidu pan, with an explicit
+  *"academic research and non-commercial use only"* restriction — blocked for a commercial
+  benchmark, and the repo owner's authority to license the images is unverifiable.
