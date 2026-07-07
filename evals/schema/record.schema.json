@@ -52,7 +52,8 @@
         "paut": { "$ref": "#/$defs/paut" },
         "rgb": { "$ref": "#/$defs/rgb" },
         "eddy": { "$ref": "#/$defs/genericModality" },
-        "thermography": { "$ref": "#/$defs/genericModality" }
+        "thermography": { "$ref": "#/$defs/genericModality" },
+        "scan3d": { "$ref": "#/$defs/scan3d" }
       }
     },
     "annotations": {
@@ -113,6 +114,21 @@
         "data_ref": { "type": "string" },
         "checksum_sha256": { "type": "string" },
         "resolution_px": { "type": "array", "items": { "type": "integer" } }
+      }
+    },
+    "scan3d": {
+      "type": "object",
+      "description": "3D surface-geometry scan (structured light / laser) — the dimensional/visual inspection modality. Mesh or point cloud.",
+      "required": ["data_ref"],
+      "additionalProperties": true,
+      "properties": {
+        "data_ref": { "type": "string" },
+        "checksum_sha256": { "type": "string" },
+        "format": { "type": "string", "description": "e.g. ply-ascii, ply-binary-le" },
+        "n_vertices": { "type": "integer", "minimum": 0 },
+        "n_faces": { "type": "integer", "minimum": 0 },
+        "bbox": { "type": "array", "items": { "type": "number" }, "minItems": 6, "maxItems": 6, "description": "[xmin, ymin, zmin, xmax, ymax, zmax] in the scanner's units (mm for known sources)." },
+        "scanner": { "type": "string", "description": "Acquisition device, best-effort." }
       }
     },
     "genericModality": {

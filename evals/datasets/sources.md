@@ -44,6 +44,13 @@ calls the compounding asset. Every partner dataset later flows through the same 
 
 ## Open items
 - [ ] Confirm canonical URLs + licenses for each source above (don't ingest anything unlicensed).
-- [ ] Decide per-source default acceptance class, or score-under-all-three policy.
-- [ ] Write the first adapter (girth-weld set — best taxonomy fit) end-to-end as the reference.
-- [ ] Build the manifest format (path, sha256, source, license) and a validator against the schema.
+- [ ] Decide per-source default acceptance class, or score-under-all-three policy (the first
+      adapter's interim answer: one assumed default class, flagged in provenance, CLI-settable).
+- [x] ~~Write the first adapter end-to-end as the reference~~ — done 2026-07-06, but for
+      **abonyilab scan3d** (`ingest/abonyilab_scan3d.py`), not the girth-weld set (ruled out
+      above). First real public data through the schema; proves the multimodal claim on a second
+      modality. PAUT adapter still pending a licensable PAUT source.
+- [x] ~~Build the manifest format + a validator against the schema~~ — manifests are JSONL of
+      schema-valid records (checksums inside the modality block, raw files git-ignored), written
+      by adapters into `manifests/`, validated record-by-record in tests
+      (`tests/test_scan3d_ingest.py::test_committed_manifest_is_schema_valid_and_complete`).
