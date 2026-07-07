@@ -92,6 +92,13 @@ def read_ply(data: bytes, name: str = "<bytes>") -> PlyMesh:
     the vertex bounding box. Faces are counted from the header, never parsed — the modality block
     doesn't need connectivity, and the real meshes' variable-length face lists make skipping them
     the honest cheap option."""
+    mesh, _ = read_ply_with_vertices(data, name)
+    return mesh
+
+
+def read_ply_with_vertices(data: bytes, name: str = "<bytes>") -> tuple[PlyMesh, np.ndarray]:
+    """Like read_ply, but also return the (n_vertices, 3) xyz array — for downstream geometry
+    (e.g. features/scan3d_deviation.py), which needs the points, not just the metadata block."""
     header, body_offset = _split_header(data, name)
     fmt, elements = _parse_header(header, name)
 
@@ -106,13 +113,14 @@ def read_ply(data: bytes, name: str = "<bytes>") -> PlyMesh:
         else _binary_vertices(data, body_offset, n_vertices, vertex_props, name)
     )
     lo, hi = xyz.min(axis=0), xyz.max(axis=0)
-    return PlyMesh(
+    mesh = PlyMesh(
         format=fmt,
         n_vertices=n_vertices,
         n_faces=n_faces,
         bbox=(float(lo[0]), float(lo[1]), float(lo[2]), float(hi[0]), float(hi[1]), float(hi[2])),
         checksum_sha256=hashlib.sha256(data).hexdigest(),
     )
+    return mesh, xyz
 
 
 def _split_header(data: bytes, name: str) -> tuple[str, int]:

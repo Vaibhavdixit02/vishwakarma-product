@@ -50,6 +50,11 @@ calls the compounding asset. Every partner dataset later flows through the same 
       **abonyilab scan3d** (`ingest/abonyilab_scan3d.py`), not the girth-weld set (ruled out
       above). First real public data through the schema; proves the multimodal claim on a second
       modality. PAUT adapter still pending a licensable PAUT source.
+- [x] ~~First real-data feature vector~~ — done 2026-07-06: `evals/features/scan3d_deviation.py`
+      (trimmed-ICP alignment to the ideal-etalon scan + deviation-field reduction to percentile/
+      cluster features, embedded in each record's `modalities.scan3d.deviation`). A real (if N=4)
+      geometric feature vector now exists; wiring it into `evals.baselines.trained` as a
+      scan3d-only baseline is a natural next step, not yet done.
 - [x] ~~Build the manifest format + a validator against the schema~~ — manifests are JSONL of
       schema-valid records (checksums inside the modality block, raw files git-ignored), written
       by adapters into `manifests/`, validated record-by-record in tests
